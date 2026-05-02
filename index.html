@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="VoteGuide India — Learn about Indian elections step by step. Powered by Google Gemini AI and Google Maps." />
+    <meta name="keywords" content="Indian election, voter registration, ECI, Lok Sabha, Vidhan Sabha, election process, how to vote India" />
+    <meta name="theme-color" content="#003087" />
+
+    <!-- Open Graph -->
+    <meta property="og:title"       content="VoteGuide India — Indian Election Education" />
+    <meta property="og:description" content="Your complete guide to understanding Indian elections, powered by Google AI." />
+    <meta property="og:type"        content="website" />
+
+    <title>VoteGuide India | Indian Election Education</title>
+
+    <!-- Google Analytics 4 — measurement ID injected at build time via Vite env -->
+    <script>
+      (function() {
+        var GA_ID = '%VITE_GA4_MEASUREMENT_ID%';
+        if (!GA_ID || GA_ID === '%VITE_GA4_MEASUREMENT_ID%') return;
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', GA_ID, { send_page_view: false });
+      })();
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
