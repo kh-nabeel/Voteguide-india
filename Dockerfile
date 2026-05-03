@@ -32,6 +32,9 @@ COPY --from=builder /app/dist ./dist
 # Copy the Express server
 COPY server ./server
 
+# Copy the .env file for runtime configuration (GEMINI_API_KEY, etc.)
+COPY .env ./
+
 # Cloud Run sets PORT automatically (default 8080)
 ENV PORT=8080
 ENV NODE_ENV=production
