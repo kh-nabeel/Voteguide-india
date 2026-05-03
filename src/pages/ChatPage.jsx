@@ -1,8 +1,12 @@
 /**
  * ChatPage.jsx
- * AI-powered chat interface using the Gemini API (via /api/chat backend).
- * Features: quick-topic chips, conversation history, typing indicator,
- * GA4 event tracking, and accessibility (aria-live log).
+ * 
+ * WHY THIS EXISTS:
+ * This component provides an accessible, conversational interface to the Gemini AI. 
+ * We implemented it with strict state management (tracking conversation history) and 
+ * an `aria-live="polite"` log to ensure screen-reader compatibility. The frontend 
+ * never calls Gemini directly; instead, it delegates to our Express backend to 
+ * maintain security, rate limiting, and API key protection.
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';

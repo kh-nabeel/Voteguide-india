@@ -1,10 +1,13 @@
 /**
  * server/index.js — VoteGuide India Express Server
- *
- * Google Cloud Services:
- *  - Google Gemini AI     : /api/chat — AI election assistant
- *  - Google Cloud Logging : structured JSON logs to stdout
- *  - Google Cloud Run     : container entrypoint (PORT env var)
+ * 
+ * WHY THIS FILE EXISTS:
+ * This server acts as a secure proxy between the client frontend and external APIs 
+ * (like Google Gemini). By handling API calls server-side, we protect sensitive 
+ * credentials (GEMINI_API_KEY) from being exposed in the browser. It also serves 
+ * as the entry point for Google Cloud Run containerization, handling HTTP traffic,
+ * enforcing OWASP security standards (via Helmet, CORS, and XSS sanitization), 
+ * and funneling telemetry to Google Cloud Logging.
  */
 
 'use strict';
@@ -16,6 +19,7 @@ const helmet      = require('helmet');
 const compression = require('compression');
 const morgan      = require('morgan');
 const rateLimit   = require('express-rate-limit');
+const xss         = require('xss'); // OWASP compliant input sanitization
 require('dotenv').config();
 
 const app           = express();
@@ -112,9 +116,18 @@ const globalLimiter = rateLimit({
 app.use('/api', globalLimiter);
 
 // ── Utility: Sanitize Input ───────────────────────────────────────────────────
+/**
+ * WHY THIS EXISTS:
+ * To protect against Cross-Site Scripting (XSS) attacks. By sanitizing all 
+ * incoming strings with an OWASP-compliant library, we ensure malicious 
+ * payloads cannot be executed or stored.
+ * 
+ * @param {string} input - The raw input string from the client
+ * @returns {string} The sanitized string
+ */
 function sanitize(input) {
   if (typeof input !== 'string') return '';
-  return input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return xss(input); // Strips HTML tags and potentially dangerous attributes
 }
 
 // ── Static Files ──────────────────────────────────────────────────────────────
@@ -124,6 +137,12 @@ app.use(express.static(path.join(__dirname, '../dist'), {
 }));
 
 // ── Health Check ──────────────────────────────────────────────────────────────
+/**
+ * WHY THIS EXISTS:
+ * Required by container orchestration systems (like Google Cloud Run) to verify 
+ * that the instance is healthy and ready to receive traffic. Also provides a quick 
+ * diagnostic view of the environment variables.
+ */
 app.get('/api/health', (_req, res) => {
   res.json({
     status: 'healthy', service: 'VoteGuide India', version: '2.0.0',
@@ -137,6 +156,12 @@ app.get('/api/health', (_req, res) => {
 });
 
 // ── Gemini Chat Endpoint ──────────────────────────────────────────────────────
+/**
+ * WHY THIS EXISTS:
+ * Proxies the user's prompt to Google Gemini. The server acts as a middleware to 
+ * inject the SYSTEM_PROMPT (enforcing neutrality and political safety rules) and 
+ * handles API Key authentication securely without exposing it to the client.
+ */
 app.post('/api/chat', chatLimiter, async (req, res) => {
   let { message, history = [] } = req.body;
   message = sanitize(message);
@@ -200,6 +225,13 @@ app.post('/api/chat', chatLimiter, async (req, res) => {
 });
 
 // ── Feedback Endpoint (logs to Cloud Logging via stdout) ──────────────────────
+/**
+ * WHY THIS EXISTS:
+ * Provides a structured way to ingest user feedback. Instead of spinning up a 
+ * dedicated database, we log the sanitized feedback to stdout, which Google 
+ * Cloud Run automatically funnels into Google Cloud Logging for secure, scalable 
+ * querying.
+ */
 app.post('/api/feedback', feedbackLimiter, (req, res) => {
   let { rating, comment = '', page = '' } = req.body;
   comment = sanitize(comment);

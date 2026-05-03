@@ -1,7 +1,13 @@
 /**
  * App.jsx
- * Root application shell. Manages page routing and fires GA4 page_view
- * events on every navigation via the useAnalytics hook.
+ * 
+ * WHY THIS EXISTS:
+ * This is the root shell of the application. We use a custom, lightweight routing
+ * mechanism (via state `activePage`) instead of `react-router` because this is a 
+ * Single Page Application (SPA) with highly integrated, simple views. This avoids 
+ * unnecessary dependencies. It also serves as the centralized hub for telemetry,
+ * firing Google Analytics 4 (GA4) page_view events on every navigation via the 
+ * `useAnalytics` hook.
  */
 
 import { useState, useEffect } from 'react';

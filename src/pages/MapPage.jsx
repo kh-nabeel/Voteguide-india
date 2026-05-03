@@ -1,7 +1,12 @@
 /**
  * MapPage.jsx
- * Google Maps integration showing Chief Electoral Officer (CEO) offices
- * for all Indian states and Union Territories.
+ * 
+ * WHY THIS EXISTS:
+ * Integrates the Google Maps JavaScript API to provide spatial context for electoral 
+ * offices. We implemented a robust fallback mechanism (using the Google Maps Embed API) 
+ * so that if the JavaScript API fails (e.g., due to strict browser tracking protection 
+ * or network drops), the user still receives functional location data. This dual-layer 
+ * approach guarantees high availability.
  *
  * Google Services used:
  *  - Google Maps JavaScript API  — interactive map with custom markers

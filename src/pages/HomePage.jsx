@@ -1,7 +1,13 @@
 /**
  * HomePage.jsx
- * Landing page — hero, stats bar, feature navigation cards,
- * 7-step visual overview, and voter quick-tips.
+ * 
+ * WHY THIS EXISTS:
+ * Serves as the primary landing hub. It is designed to immediately orient the user 
+ * with a high-level visual overview of the electoral process, key statistics, and 
+ * clear feature navigation. The architecture separates the heavy data components 
+ * (like the Chat or Map) from this view to ensure near-instant initial load times 
+ * (Critical Rendering Path optimization), which is essential for accessibility in 
+ * low-bandwidth areas of India.
  */
 
 import { Fragment } from 'react';
