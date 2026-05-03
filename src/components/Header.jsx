@@ -10,9 +10,9 @@ const NAV_ITEMS = [
   { key: 'home',    label: 'Home' },
   { key: 'process', label: 'Election Process' },
   { key: 'types',   label: 'Types of Elections' },
-  { key: 'map',     label: '🗺️ Office Locator' },
+  { key: 'map',     label: 'Office Locator' },
   { key: 'faq',     label: 'FAQs' },
-  { key: 'chat',    label: '🤖 Ask the Guide' },
+  { key: 'chat',    label: 'Ask the Guide' },
 ];
 
 /**

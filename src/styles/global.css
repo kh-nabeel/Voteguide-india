@@ -892,6 +892,90 @@ a { color: var(--c-blue); }
 }
 
 /* ═══════════════════════════════════════════════
+   STEP OVERVIEW FLOWCHART
+   ═══════════════════════════════════════════════ */
+.step-overview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-8);
+}
+.step-overview__btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--c-white);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-4);
+  width: 130px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+.step-overview__btn:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--c-blue);
+}
+.step-overview__btn:hover .step-overview__bubble {
+  background: var(--c-blue);
+  color: var(--c-white);
+  transform: scale(1.1);
+}
+.step-overview__bubble {
+  width: 48px;
+  height: 48px;
+  background: var(--c-bg-alt);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: var(--sp-3);
+  transition: all 0.2s ease;
+  color: var(--c-blue);
+}
+.step-overview__title {
+  font-weight: 700;
+  font-size: var(--size-sm);
+  color: var(--c-blue);
+  margin-bottom: var(--sp-1);
+}
+.step-overview__label {
+  font-size: var(--size-xs);
+  color: var(--c-text-sec);
+  text-align: center;
+  line-height: 1.3;
+}
+.step-overview__arrow {
+  color: var(--c-border-strong);
+  font-size: var(--size-xl);
+  font-weight: 300;
+}
+
+/* ═══════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════ */
+.footer__btn {
+  background: none;
+  border: none;
+  color: #B8CCE4;
+  font-size: var(--size-sm);
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  transition: color 0.12s;
+  font-family: inherit;
+}
+.footer__btn:hover {
+  color: var(--c-white);
+  text-decoration: underline;
+}
+
+/* ═══════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════ */
 @media (max-width: 900px) {
@@ -905,6 +989,7 @@ a { color: var(--c-blue); }
   .stats-bar        { gap: var(--sp-6); }
   .page             { padding: var(--sp-6) var(--sp-4); }
   .msg-bubble       { max-width: 86%; }
+  .step-overview__arrow { display: none; }
 }
 @media (max-width: 480px) {
   .header__top      { padding: var(--sp-3) var(--sp-4); }

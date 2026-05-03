@@ -63,14 +63,15 @@ app.use(helmet({
       fontSrc:       ["'self'", 'https://fonts.gstatic.com'],
       imgSrc:        ["'self'", 'data:', 'https://maps.googleapis.com', 'https://maps.gstatic.com', 'https://*.ggpht.com', 'https://www.google-analytics.com'],
       connectSrc:    ["'self'", 'https://maps.googleapis.com', 'https://www.google-analytics.com', 'https://region1.google-analytics.com', 'https://generativelanguage.googleapis.com'],
-      frameSrc:      ["'none'"],
+      frameSrc:      ["'self'", 'https://www.google.com/maps/embed/'],
+      childSrc:      ["'self'", 'https://www.google.com/maps/embed/'],
       objectSrc:     ["'none'"],
     },
   },
 }));
 
 app.use(compression());
-app.use(cors({ origin: IS_PRODUCTION ? (process.env.ALLOWED_ORIGIN || 'https://voteguide-india-946676557248.us-central1.run.app') : true }));
+app.use(cors({ origin: IS_PRODUCTION ? (process.env.ALLOWED_ORIGIN || 'https://voteguide-india-946676557248.asia-south1.run.app') : true }));
 app.use(express.json({ limit: '16kb' }));
 
 // HTTP logging
@@ -157,8 +158,12 @@ app.post('/api/chat', chatLimiter, async (req, res) => {
     const { GoogleGenerativeAI } = require('@google/generative-ai');
     const genAI = new GoogleGenerativeAI(apiKey);
 
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
+    const formattedHistory = history
+      .filter((h) => h.role && h.content)
+      .map((h) => ({ role: h.role === 'assistant' ? 'model' : 'user', parts: [{ text: String(h.content) }] }));
+
+    const getModelParams = (modelName) => ({
+      model: modelName,
       systemInstruction: SYSTEM_PROMPT,
       generationConfig: { maxOutputTokens: 400, temperature: 0.4, topP: 0.9 },
       safetySettings: [
@@ -168,19 +173,29 @@ app.post('/api/chat', chatLimiter, async (req, res) => {
       ],
     });
 
-    const formattedHistory = history
-      .filter((h) => h.role && h.content)
-      .map((h) => ({ role: h.role === 'assistant' ? 'model' : 'user', parts: [{ text: String(h.content) }] }));
-
-    const chat  = model.startChat({ history: formattedHistory });
-    const result = await chat.sendMessage(message);
-    const reply  = result.response.text();
+    let reply = '';
+    try {
+      const model = genAI.getGenerativeModel(getModelParams('gemini-2.0-flash'));
+      const chat  = model.startChat({ history: formattedHistory });
+      const result = await chat.sendMessage(message);
+      reply = result.response.text();
+    } catch (err1) {
+      log('INFO', 'gemini-2.0-flash failed, falling back to gemini-pro', { message: err1.message });
+      const model = genAI.getGenerativeModel(getModelParams('gemini-pro'));
+      const chat  = model.startChat({ history: formattedHistory });
+      const result = await chat.sendMessage(message);
+      reply = result.response.text();
+    }
 
     log('INFO', 'Chat handled', { messageLength: message.length, replyLength: reply.length });
     return res.json({ reply });
   } catch (err) {
     log('ERROR', 'Gemini error', { message: err.message });
-    return res.status(502).json({ error: 'The AI assistant is temporarily unavailable.' });
+    // Detailed error returned so user knows if it's a quota issue
+    const isQuotaError = err.message.includes('429');
+    return res.status(502).json({ 
+      error: isQuotaError ? 'The AI assistant is temporarily unavailable due to high traffic (Quota Exceeded).' : 'The AI assistant is temporarily unavailable.' 
+    });
   }
 });
 

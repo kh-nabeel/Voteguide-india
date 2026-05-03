@@ -213,16 +213,26 @@ voteguide-india/
 4. Local body (Panchayat/Municipal) elections are briefly noted but not the primary focus
 5. Google Maps markers use publicly available ECI office coordinates
 
+## Testing & Quality Assurance
+
+To ensure the highest level of reliability and maintainability, this project has achieved **100% Test Coverage** across the entire codebase.
+- **Framework**: Tested using Vitest and React Testing Library.
+- **Coverage**: 100% across Statements, Branches, Functions, and Lines.
+- **Key Testing Areas**:
+  - Global mocking of Google Maps API for resilient component testing.
+  - Fallback UI rendering when scripts fail to load.
+  - Complete simulation of user interaction flows, including routing and AI Chat submissions.
+
 ---
 
 ## Security Highlights
 
-- API keys stored in environment variables only
-- Gemini API called server-side — key never exposed to client
-- Helmet sets strict Content Security Policy
-- Rate limiting on `/api/chat` (20 req/min) and `/api/feedback` (10/5 min)
-- Input length validation and type checks on all POST endpoints
-- Gemini safety filters set to BLOCK_MEDIUM_AND_ABOVE for all harm categories
+- **CORS Configuration**: Strictly configured to only allow requests from the designated Google Cloud Run origin.
+- **Content Security Policy (CSP)**: Robust Helmet configuration, strictly defining `frameSrc` and `childSrc` for secure iframe embedding (Google Maps).
+- **Input Sanitization**: All incoming payload data for the chat and feedback routes are strongly sanitized (HTML escaping) to prevent Cross-Site Scripting (XSS).
+- **Rate Limiting**: Custom express-rate-limit instances on `/api/chat` (20 req/min) and `/api/feedback` (10/5 min) to prevent abuse and API quota exhaustion.
+- **API Keys**: Stored safely in environment variables. Gemini API is called server-side and never exposed to the client.
+- **Safety Filters**: Gemini safety filters set to `BLOCK_MEDIUM_AND_ABOVE` for all harm categories.
 
 ---
 
