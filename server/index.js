@@ -70,7 +70,7 @@ app.use(helmet({
 }));
 
 app.use(compression());
-app.use(cors({ origin: IS_PRODUCTION ? (process.env.ALLOWED_ORIGIN || true) : true }));
+app.use(cors({ origin: IS_PRODUCTION ? (process.env.ALLOWED_ORIGIN || 'https://voteguide-india-946676557248.us-central1.run.app') : true }));
 app.use(express.json({ limit: '16kb' }));
 
 // HTTP logging
@@ -98,8 +98,23 @@ const chatLimiter = rateLimit({
 
 const feedbackLimiter = rateLimit({
   windowMs: 5 * 60 * 1000, max: 10,
-  message: { error: 'Too many submissions. Please wait.' },
+  message: { error: 'Feedback limit reached. Please try again later.' },
 });
+
+// Global baseline rate limiter
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, max: 100, // 100 requests per 15 minutes
+  standardHeaders: true, legacyHeaders: false,
+  message: { error: 'Too many requests from this IP, please try again later.' },
+});
+
+app.use('/api', globalLimiter);
+
+// ── Utility: Sanitize Input ───────────────────────────────────────────────────
+function sanitize(input) {
+  if (typeof input !== 'string') return '';
+  return input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
 
 // ── Static Files ──────────────────────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, '../dist'), {
@@ -122,7 +137,8 @@ app.get('/api/health', (_req, res) => {
 
 // ── Gemini Chat Endpoint ──────────────────────────────────────────────────────
 app.post('/api/chat', chatLimiter, async (req, res) => {
-  const { message, history = [] } = req.body;
+  let { message, history = [] } = req.body;
+  message = sanitize(message);
 
   if (!message || typeof message !== 'string') {
     return res.status(400).json({ error: 'A valid message string is required.' });
@@ -170,7 +186,9 @@ app.post('/api/chat', chatLimiter, async (req, res) => {
 
 // ── Feedback Endpoint (logs to Cloud Logging via stdout) ──────────────────────
 app.post('/api/feedback', feedbackLimiter, (req, res) => {
-  const { rating, comment = '', page = '' } = req.body;
+  let { rating, comment = '', page = '' } = req.body;
+  comment = sanitize(comment);
+  page = sanitize(page);
 
   if (!rating || typeof rating !== 'number' || rating < 1 || rating > 5) {
     return res.status(400).json({ error: 'Rating must be a number between 1 and 5.' });

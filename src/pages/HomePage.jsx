@@ -153,56 +153,30 @@ export default function HomePage({ navigate }) {
             <p>A quick visual overview — click any step to learn more</p>
           </div>
 
-          <div
-            style={{
-              display: 'flex', alignItems: 'center',
-              overflowX: 'auto', gap: 0, paddingBottom: '8px',
-            }}
-          >
+          <div className="step-overview">
             {STEP_OVERVIEW.map(({ step, icon, label }, i) => (
               <Fragment key={step}>
                 <button
-                  style={{
-                    display: 'flex', flexDirection: 'column',
-                    alignItems: 'center', minWidth: '96px',
-                    background: 'none', border: 'none', cursor: 'pointer',
-                    padding: '4px',
-                  }}
+                  className="step-overview__btn"
                   onClick={() => navigate('process')}
                   aria-label={`Step ${step}: ${label}`}
                 >
                   <div
-                    style={{
-                      width: 52, height: 52, borderRadius: '50%',
-                      background: 'var(--c-blue)', color: 'white',
-                      display: 'flex', alignItems: 'center',
-                      justifyContent: 'center', fontSize: 24,
-                      border: '3px solid var(--c-saffron)',
-                      boxShadow: 'var(--shadow-md)',
-                    }}
+                    className="step-overview__bubble"
                     aria-hidden="true"
                   >
                     {icon}
                   </div>
-                  <span
-                    style={{
-                      fontSize: '11px', fontWeight: 700,
-                      color: 'var(--c-blue)', marginTop: 5,
-                      textTransform: 'uppercase', fontFamily: 'var(--font-sans)',
-                    }}
-                  >
+                  <span className="step-overview__title">
                     Step {step}
                   </span>
-                  <span style={{ fontSize: '12px', color: 'var(--c-text-sec)', textAlign: 'center' }}>
+                  <span className="step-overview__label">
                     {label}
                   </span>
                 </button>
 
                 {i < STEP_OVERVIEW.length - 1 && (
-                  <span
-                    aria-hidden="true"
-                    style={{ color: 'var(--c-orange)', fontSize: 22, fontWeight: 700, padding: '0 2px', flexShrink: 0 }}
-                  >
+                  <span className="step-overview__arrow" aria-hidden="true">
                     →
                   </span>
                 )}

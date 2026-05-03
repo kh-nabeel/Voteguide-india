@@ -90,8 +90,20 @@ describe('HomePage', () => {
     }
   });
 
-  it('renders the "Learn Each Step in Detail" navigation button', () => {
-    renderHome();
-    expect(screen.getByRole('button', { name: /learn each step/i })).toBeInTheDocument();
+  it('calls navigate("process") when a step in the visual overview is clicked', async () => {
+    const user = userEvent.setup();
+    const { navigate } = renderHome();
+    await user.click(screen.getByRole('button', { name: /step 1/i }));
+    expect(navigate).toHaveBeenCalledWith('process');
+  });
+
+  it('renders the "Learn Each Step in Detail" navigation button and calls navigate on click', async () => {
+    const user = userEvent.setup();
+    const { navigate } = renderHome();
+    const btn = screen.getByRole('button', { name: /learn each step/i });
+    expect(btn).toBeInTheDocument();
+    
+    await user.click(btn);
+    expect(navigate).toHaveBeenCalledWith('process');
   });
 });
