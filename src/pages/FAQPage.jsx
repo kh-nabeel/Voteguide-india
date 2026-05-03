@@ -4,7 +4,7 @@
  * registration steps. GA4 tracks which questions users expand.
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FAQS }          from '../data/electionData.js';
 import FeedbackWidget    from '../components/FeedbackWidget.jsx';
 import { useAnalytics }  from '../hooks/useGoogleServices.js';

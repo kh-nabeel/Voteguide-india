@@ -4,7 +4,7 @@
  * events on every navigation via the useAnalytics hook.
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Header       from './components/Header.jsx';
 import Footer       from './components/Footer.jsx';
 import HomePage     from './pages/HomePage.jsx';

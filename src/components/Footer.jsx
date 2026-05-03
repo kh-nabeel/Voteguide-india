@@ -3,7 +3,7 @@
  * Site footer with quick links, contact info, and legal disclaimer.
  */
 
-import React from 'react';
+import PropTypes from 'prop-types';
 
 /** @param {{ navigate: (page: string) => void }} props */
 export default function Footer({ navigate }) {
@@ -17,7 +17,7 @@ export default function Footer({ navigate }) {
           <p>
             An AI-powered election education portal built for the Google India
             PromptWars Virtual Hackathon. Helping every Indian citizen understand
-            the world's largest democratic process.
+            the world&apos;s largest democratic process.
           </p>
           <p style={{ marginTop: '12px', fontSize: '12px', opacity: 0.75 }}>
             Powered by Google Gemini AI · Google Maps · Google Analytics ·
@@ -57,12 +57,16 @@ export default function Footer({ navigate }) {
           <a href="https://www.eci.gov.in" target="_blank" rel="noopener noreferrer">
             www.eci.gov.in
           </a>
-          . Built with ❤️ for India's Democracy.
+          . Built with ❤️ for India&apos;s Democracy.
         </p>
       </div>
     </footer>
   );
 }
+
+Footer.propTypes = {
+  navigate: PropTypes.func.isRequired,
+};
 
 // Inline style for footer nav buttons (resets button to look like a link)
 const linkStyle = {

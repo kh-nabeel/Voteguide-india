@@ -3,7 +3,8 @@
  * Site header with GoI branding, tricolour accent bar, and primary navigation.
  */
 
-import React from 'react';
+
+import PropTypes from 'prop-types';
 
 const NAV_ITEMS = [
   { key: 'home',    label: 'Home' },
@@ -67,3 +68,10 @@ export default function Header({ activePage, navigate }) {
     </header>
   );
 }
+
+Header.propTypes = {
+  /** The currently active page key (e.g. 'home', 'map') */
+  activePage: PropTypes.string.isRequired,
+  /** Callback to navigate to a given page key */
+  navigate:   PropTypes.func.isRequired,
+};

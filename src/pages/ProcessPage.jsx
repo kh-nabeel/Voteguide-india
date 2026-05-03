@@ -5,7 +5,7 @@
  * "Know More" fact box. Tracks expansions in GA4.
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ELECTION_STEPS }  from '../data/electionData.js';
 import FeedbackWidget      from '../components/FeedbackWidget.jsx';
 import { useAnalytics }    from '../hooks/useGoogleServices.js';

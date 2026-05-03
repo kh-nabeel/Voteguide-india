@@ -19,7 +19,7 @@ export function useAnalytics() {
   /** @param {string} pageName  Human-readable label shown in GA4 reports */
   /** @param {string} pageId    Route identifier used in page_location */
   const trackPageView = useCallback((pageName, pageId) => {
-    if (typeof window.gtag !== 'function') return;
+    if (typeof window.gtag !== 'function') {return;}
     window.gtag('event', 'page_view', {
       page_title:    pageName,
       page_location: `${window.location.origin}/#${pageId}`,
@@ -32,7 +32,7 @@ export function useAnalytics() {
    * @param {Object} [params={}] Additional GA4 event parameters
    */
   const trackEvent = useCallback((eventName, params = {}) => {
-    if (typeof window.gtag !== 'function') return;
+    if (typeof window.gtag !== 'function') {return;}
     window.gtag('event', eventName, params);
   }, []);
 

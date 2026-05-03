@@ -5,9 +5,10 @@
  * GA4 event tracking, and accessibility (aria-live log).
  */
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { QUICK_TOPICS }  from '../data/electionData.js';
 import { useAnalytics }  from '../hooks/useGoogleServices.js';
+import { formatMessage } from '../utils/formatMessage.js';
 
 /** Initial bot greeting shown on first load */
 const WELCOME_MESSAGE = {
@@ -25,12 +26,6 @@ I can help you understand:
 Ask me any question about Indian elections in plain English.`,
 };
 
-/** Renders bold markdown (**text**) and newlines safely */
-function formatMessage(text) {
-  return text
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\n/g, '<br />');
-}
 
 export default function ChatPage() {
   const [messages,    setMessages]    = useState([WELCOME_MESSAGE]);
@@ -50,7 +45,7 @@ export default function ChatPage() {
   /** Send a message to the /api/chat endpoint */
   const sendMessage = useCallback(async (text) => {
     const trimmed = (text ?? inputValue).trim();
-    if (!trimmed || isLoading) return;
+    if (!trimmed || isLoading) {return;}
 
     setInputValue('');
     setMessages((prev) => [...prev, { role: 'user', content: trimmed }]);

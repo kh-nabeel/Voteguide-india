@@ -4,7 +4,8 @@
  * 7-step visual overview, and voter quick-tips.
  */
 
-import React from 'react';
+import { Fragment } from 'react';
+import PropTypes          from 'prop-types';
 import { useAnalytics } from '../hooks/useGoogleServices.js';
 
 const FEATURES = [
@@ -80,8 +81,8 @@ export default function HomePage({ navigate }) {
       {/* ── Hero ── */}
       <section className="hero" aria-label="Welcome">
         <div className="hero__inner">
-          <div className="hero__badge">🗳️ World's Largest Democracy</div>
-          <h2>Understand India's Election Process</h2>
+          <div className="hero__badge">🗳️ World&apos;s Largest Democracy</div>
+          <h2>Understand India&apos;s Election Process</h2>
           <p className="hero__sub">
             Your complete, plain-English guide to Indian elections — from voter
             registration to government formation. Simple enough for every citizen.
@@ -159,7 +160,7 @@ export default function HomePage({ navigate }) {
             }}
           >
             {STEP_OVERVIEW.map(({ step, icon, label }, i) => (
-              <React.Fragment key={step}>
+              <Fragment key={step}>
                 <button
                   style={{
                     display: 'flex', flexDirection: 'column',
@@ -205,7 +206,7 @@ export default function HomePage({ navigate }) {
                     →
                   </span>
                 )}
-              </React.Fragment>
+              </Fragment>
             ))}
           </div>
 
@@ -255,3 +256,8 @@ export default function HomePage({ navigate }) {
     </>
   );
 }
+
+HomePage.propTypes = {
+  /** Callback to navigate to a given page key */
+  navigate: PropTypes.func.isRequired,
+};

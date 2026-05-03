@@ -3,7 +3,7 @@
  * Explains the three main types of Indian elections with comparison table.
  */
 
-import React from 'react';
+
 import { ELECTION_TYPES } from '../data/electionData.js';
 import FeedbackWidget     from '../components/FeedbackWidget.jsx';
 

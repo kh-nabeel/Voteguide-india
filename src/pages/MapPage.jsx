@@ -9,7 +9,7 @@
  *  - Google Analytics 4          — tracks office_selected events
  */
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { ECI_OFFICES }  from '../data/electionData.js';
 import { useAnalytics } from '../hooks/useGoogleServices.js';
 import FeedbackWidget   from '../components/FeedbackWidget.jsx';
@@ -78,7 +78,7 @@ export default function MapPage() {
 
   // ── Initialise map once API is ready ────────────────────────────────────────
   useEffect(() => {
-    if (!mapReady || !mapRef.current) return;
+    if (!mapReady || !mapRef.current) {return;}
     // If already initialised (Strict Mode double-invoke), just resize
     if (googleMapRef.current) {
       window.google.maps.event.trigger(googleMapRef.current, 'resize');
@@ -130,11 +130,11 @@ export default function MapPage() {
 
       markersRef.current.push(marker);
     });
-  }, [mapReady]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [mapReady]);  
 
   // ── Fly map to a selected office ────────────────────────────────────────────
   const flyToOffice = useCallback((office) => {
-    if (!googleMapRef.current) return;
+    if (!googleMapRef.current) {return;}
     googleMapRef.current.panTo({ lat: office.lat, lng: office.lng });
     googleMapRef.current.setZoom(SELECTED_ZOOM);
   }, []);
@@ -157,7 +157,7 @@ export default function MapPage() {
       googleMapRef.current.panTo(INDIA_CENTER);
       googleMapRef.current.setZoom(INDIA_ZOOM);
     }
-    if (infoWindowRef.current) infoWindowRef.current.close();
+    if (infoWindowRef.current) {infoWindowRef.current.close();}
     setSelectedOffice(null);
   };
 

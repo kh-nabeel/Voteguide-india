@@ -5,9 +5,10 @@
  * Also fires a GA4 'feedback_submitted' event via the useAnalytics hook.
  */
 
-import React, { useState } from 'react';
-import { useFeedback }   from '../hooks/useGoogleServices.js';
-import { useAnalytics }  from '../hooks/useGoogleServices.js';
+
+import { useState } from 'react';
+import PropTypes              from 'prop-types';
+import { useFeedback, useAnalytics } from '../hooks/useGoogleServices.js';
 
 const STARS = [1, 2, 3, 4, 5];
 
@@ -25,7 +26,7 @@ export default function FeedbackWidget({ page }) {
   const { trackEvent }     = useAnalytics();
 
   const handleSubmit = async () => {
-    if (!selected) return;
+    if (!selected) {return;}
     setStatus('loading');
 
     const result = await submitFeedback({ rating: selected, comment, page });
@@ -105,3 +106,8 @@ export default function FeedbackWidget({ page }) {
     </section>
   );
 }
+
+FeedbackWidget.propTypes = {
+  /** Identifies which page this widget is embedded on (used in GA4 + logging) */
+  page: PropTypes.string.isRequired,
+};
